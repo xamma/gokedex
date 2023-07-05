@@ -47,10 +47,22 @@ func CreatePokemon(dbpool *pgxpool.Pool, tablename string, pokemon *models.Pokem
 
     return nil
 }
-// // GetPokemon retrieves a Pokémon record from the database based on the provided ID
-// func GetPokemon(dbpool *pgxpool.Pool, id int) (*models.Pokemon, error) {
-//     // Implement the logic to retrieve the Pokémon record from the database
-// }
+// GetPokemon retrieves a Pokémon record from the database based on the provided ID
+func GetPokemon(dbpool *pgxpool.Pool, tablename string, name string) (*models.Pokemon, error) {
+	var pokemon models.Pokemon
+
+    err := dbpool.QueryRow(
+        context.Background(),
+        fmt.Sprintf("SELECT name, type, caught_date FROM %s WHERE name = $1", tablename),
+        name,
+    ).Scan(&pokemon.Name, &pokemon.Type, &pokemon.CaughtDate)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &pokemon, nil
+}
 
 // GetPokemons returns a slice of Pokémon record from the database
 func GetPokemons(dbpool *pgxpool.Pool, tablename string) ([]models.Pokemon, error) {
@@ -84,7 +96,18 @@ func GetPokemons(dbpool *pgxpool.Pool, tablename string) ([]models.Pokemon, erro
 //     // Implement the logic to update the Pokémon record in the database
 // }
 
-// // DeletePokemon deletes a Pokémon record from the database based on the provided ID
-// func DeletePokemon(dbpool *pgxpool.Pool, id int) error {
-//     // Implement the logic to delete the Pokémon record from the database
-// }
+// DeletePokemon deletes a Pokémon record from the database based on the provided name
+// The Exec function is used, because there are no rows returned
+func DeletePokemon(dbpool *pgxpool.Pool, tablename string, name string) error {
+    _, err := dbpool.Exec(
+		context.Background(),
+		fmt.Sprintf("DELETE FROM %s WHERE name = $1", tablename),
+		name,
+	)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

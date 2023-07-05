@@ -3,6 +3,7 @@ package handlers
 import (
 	"net/http"
 	"encoding/json"
+	"fmt"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -17,7 +18,6 @@ func CreatePokemonHandler(dbpool *pgxpool.Pool, tableName string) gin.HandlerFun
 		var pokemon models.Pokemon
 		if err := c.ShouldBindJSON(&pokemon); err != nil {
 			if _, ok := err.(*json.UnmarshalTypeError); ok {
-				// Remove the current time initialization here
 			} else {
 				c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 				return
@@ -43,5 +43,49 @@ func GetPokemonsHandler(dbpool *pgxpool.Pool, tableName string) gin.HandlerFunc 
 		}
 
 		c.JSON(http.StatusOK, pokemons)
+	}
+}
+
+func GetPokemonHandler(dbpool *pgxpool.Pool, tableName string) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		// if we want to work with DB id
+		// id := c.Param("id")
+		pokeName := c.Param("name")
+
+		// Convert the ID to an integer
+		// pokemonID, err := strconv.Atoi(id)
+
+		// if err != nil {
+		// 	c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
+		// 	return
+		// }
+
+		pokemon, err := database.GetPokemon(dbpool, tableName, pokeName)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve Pokemon record"})
+			return
+		}
+
+		if pokemon == nil {
+			// Handle the case when no Pokemon is found with the name
+			c.JSON(http.StatusNotFound, gin.H{"error": "Pokemon not found"})
+			return
+		}
+
+		c.JSON(http.StatusOK, pokemon)
+	}
+}
+
+func DeletePokemonHandler(dbpool *pgxpool.Pool, tableName string) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		pokeName := c.Param("name")
+
+		err := database.DeletePokemon(dbpool, tableName, pokeName)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete Pokemon!"})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{"message":  fmt.Sprintf("Successfully deleted Pokemon %s. It was a great Pokemon!", pokeName)})
 	}
 }
