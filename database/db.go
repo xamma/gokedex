@@ -62,5 +62,11 @@ func InitDatabase(config *models.AppConfig) (*pgxpool.Pool, error) {
 		return nil, err
 	}
 
+	// Create the "pokemon" table if it doesn't exist
+    err = CreatePokemonTable(conn, config.DatabaseTableName)
+    if err != nil {
+        return nil, err
+    }
+
 	return conn, nil
 }

@@ -10,16 +10,19 @@ func LoadConfig() (*models.AppConfig, error) {
 	defaultEnvVars := map[string]string{
 		"DATABASE_URL": "",
 		"DATABASE_NAME": "pokedex",
+		"DATABASE_TABLE_NAME": "pokemon",
 		"API_PORT": "8080",
 	}
 
 	databaseUrl := getEnv("DATABASE_URL", defaultEnvVars)
 	databaseName := getEnv("DATABASE_NAME", defaultEnvVars)
+	databaseTableName := getEnv("DATABASE_TABLE_NAME", defaultEnvVars)
 	apiPort := getEnv("API_PORT", defaultEnvVars)
 
 	config := &models.AppConfig{
 		DatabaseUrl: databaseUrl,
 		DatabaseName: databaseName,
+		DatabaseTableName: databaseTableName,
 		ApiPort: apiPort,
 	}
 
