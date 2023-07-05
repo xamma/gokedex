@@ -15,3 +15,6 @@ Get a postgresql-Container:
 ```
 docker run --name some-postgres -p 5432:5432 -e POSTGRES_PASSWORD=mysecretpassword -v postgres_data:/var/lib/postgresql/data -d postgres
 ```
+
+### Learnings
+- lowercase function definitions are considered as unexported, so if creating packages you have to write them Uppercase to use them in other packages.  

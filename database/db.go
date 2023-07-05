@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/xamma/gokedex/models"
 )
 
 func CreateConnPool(databaseURL string) (*pgxpool.Pool, error) {
@@ -38,5 +39,28 @@ func ConnectToDatabase(databaseURL string, databaseName string) (*pgxpool.Pool, 
 	if err != nil {
 		return nil, err
 	}
+	return conn, nil
+}
+
+func InitDatabase(config *models.AppConfig) (*pgxpool.Pool, error) {
+	// Create a DB connection pool
+	// urlExample := "postgres://username:password@localhost:5432/"
+	dbpool, err := CreateConnPool(config.DatabaseUrl)
+	if err != nil {
+		return nil, err
+	}
+
+	// Check if the database already exists, otherwise create it
+	err = CreateDatabaseIfNotExists(dbpool, config.DatabaseName)
+	if err != nil {
+		return nil, err
+	}
+
+	// Finally, connect to the database
+	conn, err := ConnectToDatabase(config.DatabaseUrl, config.DatabaseName)
+	if err != nil {
+		return nil, err
+	}
+
 	return conn, nil
 }

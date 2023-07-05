@@ -1,33 +1,24 @@
 package main
 
 import (
-	"os"
 	"log"
 
 	"github.com/xamma/gokedex/database"
+	"github.com/xamma/gokedex/config"
 )
 
 func main() {
 
-	// Create a DB connection pool
-	// urlExample := "postgres://username:password@localhost:5432/database_name"
-	dbpool, err := database.CreateConnPool(os.Getenv("DATABASE_URL"))
+	// load configs and overwrite defaults with ENVs
+	config, err := config.LoadConfig()
 	if err != nil {
-		log.Fatalf("Unable to connect to the database instance: %v", err)
-	}
-	defer dbpool.Close()
-
-	// Check if the database already exists, othwise create it
-	var dbname string = "poke"
-	err = database.CreateDatabaseIfNotExists(dbpool, dbname)
-	if err != nil {
-		log.Fatalf("Unable to create database: %v", err)
+		log.Fatal(err)
 	}
 
-	// finally connect to the database
-	conn, err := database.ConnectToDatabase(os.Getenv("DATABASE_URL"), dbname)
+	// Initialize database connection
+	conn, err := database.InitDatabase(config)
 	if err != nil {
-		log.Fatalf("Unable to connect to database: %v", err)
+		log.Fatalf("Unable to initialize the database: %v", err)
 	}
 	defer conn.Close()
 }
