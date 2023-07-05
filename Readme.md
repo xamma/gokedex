@@ -11,4 +11,7 @@ This is written in Microservice-Arch, so you could easily add a Frontend e.g. wi
 **IDE**: VSCode  
 
 ## How to run
-...
+Get a postgresql-Container:
+```
+docker run --name some-postgres -p 5432:5432 -e POSTGRES_PASSWORD=mysecretpassword -v postgres_data:/var/lib/postgresql/data -d postgres
+```
