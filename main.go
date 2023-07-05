@@ -11,7 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	swaggerFiles "github.com/swaggo/files"
-    ginSwagger "github.com/swaggo/gin-swagger"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	_ "github.com/xamma/gokedex/docs"
 )
 
@@ -63,5 +63,5 @@ func main() {
 	v1.PUT("/pokemon/:id", handlers.PutIDPokemonHandler(conn, config.DatabaseTableName))
 
 	port := fmt.Sprintf(":%s", config.ApiPort)
-    router.Run(port)
+	router.Run(port)
 }
