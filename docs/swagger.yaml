@@ -17,8 +17,8 @@ info:
     url: xamma.github.io
   description: Gokedex RestAPI with PostgreSQL.
   license:
-    name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
+    name: MIT
+    url: https://opensource.org/licenses/MIT
   termsOfService: placeholder
   title: Gokedex
   version: "1.0"
