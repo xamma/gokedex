@@ -8,7 +8,7 @@ import (
 
 func LoadConfig() (*models.AppConfig, error) {
 	defaultEnvVars := map[string]string{
-		"DATABASE_URL": "",
+		"DATABASE_URL": "postgres://postgres:mysecretpassword@localhost:5432/",
 		"DATABASE_NAME": "pokedex",
 		"DATABASE_TABLE_NAME": "pokemon",
 		"API_PORT": "8080",

@@ -5,7 +5,7 @@ import (
 )
 
 type Pokemon struct {
-	Name string
-	Type string
-	CaughtDate time.Time
+    Name       string    `json:"name"`
+    Type       string    `json:"type"`
+    CaughtDate time.Time `json:"caught_date"`
 }
