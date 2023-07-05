@@ -91,10 +91,39 @@ func GetPokemons(dbpool *pgxpool.Pool, tablename string) ([]models.Pokemon, erro
     return pokemons, nil
 }
 
-// // UpdatePokemon updates an existing Pokémon record in the database
-// func UpdatePokemon(dbpool *pgxpool.Pool, pokemon *models.Pokemon) error {
-//     // Implement the logic to update the Pokémon record in the database
-// }
+// UpdatePokemon updates an existing Pokémon record in the database
+// this uses the name to update, this is okay since its unique in the database.
+func UpdatePokemon(dbpool *pgxpool.Pool, tablename string, pokemon *models.Pokemon) error {
+    _, err := dbpool.Exec(
+        context.Background(),
+        fmt.Sprintf("UPDATE %s SET type = $1, caught_date = $2 WHERE name = $3", tablename),
+        pokemon.Type,
+        pokemon.CaughtDate,
+        pokemon.Name,
+    )
+    if err != nil {
+        return err
+    }
+
+    return nil
+}
+
+// UpdatePokemonbyID updates based on the ID in the database.
+func UpdatePokemonbyID(dbpool *pgxpool.Pool, tablename string, id int, pokemon *models.Pokemon) error {
+    _, err := dbpool.Exec(
+        context.Background(),
+        fmt.Sprintf("UPDATE %s SET name = $1, type = $2, caught_date = $3 WHERE id = $4", tablename),
+        pokemon.Name,
+        pokemon.Type,
+        pokemon.CaughtDate,
+        id,
+    )
+    if err != nil {
+        return err
+    }
+
+    return nil
+}
 
 // DeletePokemon deletes a Pokémon record from the database based on the provided name
 // The Exec function is used, because there are no rows returned

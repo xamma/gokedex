@@ -1,16 +1,16 @@
 package handlers
 
 import (
-	"net/http"
 	"encoding/json"
 	"fmt"
+	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v5/pgxpool"
 
 	"github.com/xamma/gokedex/database"
 	"github.com/xamma/gokedex/models"
-
 )
 
 func CreatePokemonHandler(dbpool *pgxpool.Pool, tableName string) gin.HandlerFunc {
@@ -87,5 +87,58 @@ func DeletePokemonHandler(dbpool *pgxpool.Pool, tableName string) gin.HandlerFun
 		}
 
 		c.JSON(http.StatusOK, gin.H{"message":  fmt.Sprintf("Successfully deleted Pokemon %s. It was a great Pokemon!", pokeName)})
+	}
+}
+
+func PutNamePokemonHandler(dbpool *pgxpool.Pool, tableName string) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var pokemon models.Pokemon
+
+		if err := c.ShouldBindJSON(&pokemon); err != nil {
+			if _, ok := err.(*json.UnmarshalTypeError); ok {
+			} else {
+				c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+				return
+			}
+		}
+
+		err := database.UpdatePokemon(dbpool, tableName, &pokemon)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update Pokemon!"})
+			return
+		} else {
+			c.JSON(http.StatusOK, gin.H{"message": "Successfully updated Pokemon."})
+		}
+	}
+}
+
+func PutIDPokemonHandler(dbpool *pgxpool.Pool, tableName string) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		id := c.Param("id")
+
+		// Convert the ID to an integer
+		pokemonID, err := strconv.Atoi(id)
+
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
+			return
+		}
+		var pokemon models.Pokemon
+
+		if err := c.ShouldBindJSON(&pokemon); err != nil {
+			if _, ok := err.(*json.UnmarshalTypeError); ok {
+			} else {
+				c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+				return
+			}
+		}
+
+		err = database.UpdatePokemonbyID(dbpool, tableName, pokemonID, &pokemon)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update Pokemon!"})
+			return
+		} else {
+			c.JSON(http.StatusOK, gin.H{"message": "Successfully updated Pokemon."})
+		}
 	}
 }

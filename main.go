@@ -40,6 +40,8 @@ func main() {
 	v1.GET("/pokemons", handlers.GetPokemonsHandler(conn, config.DatabaseTableName))
 	v1.GET("/pokemon/:name", handlers.GetPokemonHandler(conn, config.DatabaseTableName))
 	v1.DELETE("/pokemon/:name", handlers.DeletePokemonHandler(conn, config.DatabaseTableName))
+	v1.PUT("/pokemon", handlers.PutNamePokemonHandler(conn, config.DatabaseTableName))
+	v1.PUT("/pokemon/:id", handlers.PutIDPokemonHandler(conn, config.DatabaseTableName))
 
 	port := fmt.Sprintf(":%s", config.ApiPort)
     router.Run(port)
