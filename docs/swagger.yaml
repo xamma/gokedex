@@ -1,0 +1,180 @@
+basePath: /api/v1
+definitions:
+  models.Pokemon:
+    properties:
+      caught_date:
+        type: string
+      name:
+        type: string
+      type:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: xam93@live.de
+    name: Max
+    url: xamma.github.io
+  description: Gokedex RestAPI with PostgreSQL.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: placeholder
+  title: Gokedex
+  version: "1.0"
+paths:
+  /pokemon:
+    post:
+      consumes:
+      - application/json
+      description: Adds a Pokemon to the Pokedex
+      parameters:
+      - description: Pokemon object
+        in: body
+        name: pokemon
+        required: true
+        schema:
+          $ref: '#/definitions/models.Pokemon'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Pokemon created successfully
+          schema:
+            type: string
+      summary: Add Pokemon
+      tags:
+      - pokedex
+    put:
+      consumes:
+      - application/json
+      description: Updates a Pokemon in the Pokedex by name
+      parameters:
+      - description: Pokemon object
+        in: body
+        name: pokemon
+        required: true
+        schema:
+          $ref: '#/definitions/models.Pokemon'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully updated Pokemon
+          schema:
+            type: string
+        "400":
+          description: Failed to update Pokemon
+          schema:
+            type: string
+        "500":
+          description: Failed to update Pokemon
+          schema:
+            type: string
+      summary: Update Pokemon by name
+      tags:
+      - pokedex
+  /pokemon/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Updates a Pokemon in the Pokedex by ID
+      parameters:
+      - description: Pokemon ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Pokemon object
+        in: body
+        name: pokemon
+        required: true
+        schema:
+          $ref: '#/definitions/models.Pokemon'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully updated Pokemon
+          schema:
+            type: string
+        "400":
+          description: Failed to update Pokemon
+          schema:
+            type: string
+        "500":
+          description: Failed to update Pokemon
+          schema:
+            type: string
+      summary: Update Pokemon by ID
+      tags:
+      - pokedex
+  /pokemon/{name}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes a Pokemon from the Pokedex by name
+      parameters:
+      - description: Pokemon name
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully deleted Pokemon
+          schema:
+            type: string
+        "500":
+          description: Failed to delete Pokemon
+          schema:
+            type: string
+      summary: Deletes Pokemon
+      tags:
+      - pokedex
+    get:
+      consumes:
+      - application/json
+      description: Gets a Pokemon from the Pokedex by name
+      parameters:
+      - description: Pokemon name
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Pokemon'
+        "404":
+          description: Pokemon not found
+          schema:
+            type: string
+        "500":
+          description: Failed to retrieve Pokemon record
+          schema:
+            type: string
+      summary: Get Pokemon
+      tags:
+      - pokedex
+  /pokemons:
+    get:
+      consumes:
+      - application/json
+      description: Gets all pokemons from the pokedex.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Get Pokemons.
+      tags:
+      - pokedex
+swagger: "2.0"

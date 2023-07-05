@@ -9,8 +9,26 @@ import (
 	"github.com/xamma/gokedex/handlers"
 
 	"github.com/gin-gonic/gin"
+
+	swaggerFiles "github.com/swaggo/files"
+    ginSwagger "github.com/swaggo/gin-swagger"
+	_ "github.com/xamma/gokedex/docs"
 )
 
+// @title           Gokedex
+// @version         1.0
+// @description     Gokedex RestAPI with PostgreSQL.
+// @termsOfService  placeholder
+
+// @contact.name   Max
+// @contact.url    xamma.github.io
+// @contact.email  xam93@live.de
+
+// @license.name  Apache 2.0
+// @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @host      localhost:8080
+// @BasePath  /api/v1
 func main() {
 
 	// load configs and overwrite defaults with ENVs
@@ -36,6 +54,7 @@ func main() {
 	v1 := router.Group("/api/v1")
 
 	// Define routes
+	v1.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	v1.POST("/pokemon", handlers.CreatePokemonHandler(conn, config.DatabaseTableName))
 	v1.GET("/pokemons", handlers.GetPokemonsHandler(conn, config.DatabaseTableName))
 	v1.GET("/pokemon/:name", handlers.GetPokemonHandler(conn, config.DatabaseTableName))
