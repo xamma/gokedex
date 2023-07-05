@@ -24,8 +24,8 @@ import (
 // @contact.url    xamma.github.io
 // @contact.email  xam93@live.de
 
-// @license.name  Apache 2.0
-// @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
+// @license.name  MIT
+// @license.url   https://opensource.org/licenses/MIT
 
 // @host      localhost:8080
 // @BasePath  /api/v1
