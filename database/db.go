@@ -7,7 +7,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-func createConnPool(databaseURL string) (*pgxpool.Pool, error) {
+func CreateConnPool(databaseURL string) (*pgxpool.Pool, error) {
 	connPool, err := pgxpool.New(context.Background(), databaseURL)
 	if err != nil {
 		return nil, err
@@ -15,7 +15,7 @@ func createConnPool(databaseURL string) (*pgxpool.Pool, error) {
 	return connPool, nil
 }
 
-func createDatabaseIfNotExists(dbpool *pgxpool.Pool, dbname string) error {
+func CreateDatabaseIfNotExists(dbpool *pgxpool.Pool, dbname string) error {
 	var exists bool
 	err := dbpool.QueryRow(context.Background(), "SELECT EXISTS(SELECT 1 FROM pg_database WHERE datname = $1)", dbname).Scan(&exists)
 	if err != nil {
@@ -32,7 +32,7 @@ func createDatabaseIfNotExists(dbpool *pgxpool.Pool, dbname string) error {
 	return nil
 }
 
-func connectToDatabase(databaseURL string, databaseName string) (*pgxpool.Pool, error) {
+func ConnectToDatabase(databaseURL string, databaseName string) (*pgxpool.Pool, error) {
 	var connString string = databaseURL + databaseName
 	conn, err := pgxpool.New(context.Background(), connString)
 	if err != nil {
